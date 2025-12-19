@@ -1,0 +1,87 @@
+[33m170dcbc67[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Initial commit - D1337V2
+[33m47c0b03c1[m 📝 docs: Update development guide links in README and README.zh-CN (#10806)
+[33mc3343a198[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m997cdadc6[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.173[m[33m)[m :bookmark: chore(release): v2.0.0-next.173 [skip ci]
+[33mc60fd65f9[m :bug: fix: request to gpt5 series should not with `top_p`, temperature when reasoning effort  is not none (#10800)
+[33m36291101a[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m3bb1ce67d[m 🐛 fix fix Knowledge Base select list (#10798)
+[33m1011b13dc[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m730f00f26[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.172[m[33m)[m :bookmark: chore(release): v2.0.0-next.172 [skip ci]
+[33mc83f9660e[m 🤖 style: update i18n (#10759)
+[33m27fdb4df6[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m05a26f8df[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.171[m[33m)[m :bookmark: chore(release): v2.0.0-next.171 [skip ci]
+[33m24a766fae[m ⚡️ perf: add more sql to improve performance (#10777)
+[33mae86b92f9[m 💄 style: Update GPT-5.2 models (#10749)
+[33m1cbf94461[m ⏪ revert: remove after() from image router to avoid resource waste (#10757)
+[33m3d71004b0[m 🔨 chore: optimize not await async call (#10756)
+[33m1cd1bf971[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33ma1f27f1de[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.170[m[33m)[m :bookmark: chore(release): v2.0.0-next.170 [skip ci]
+[33mce35c281e[m ⚡️ perf(database): optimize document queries with indexes and field exclusion (#10740)
+[33ma289d87fe[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m217906bb1[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.169[m[33m)[m :bookmark: chore(release): v2.0.0-next.169 [skip ci]
+[33m4b4e96b2b[m 🌐 chore: translate non-English comments to English in file-loaders (#10746)
+[33m56b1ef217[m 🐛 fix: fix CVE errors (#10748)
+[33made246084[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m38e825dc4[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.168[m[33m)[m :bookmark: chore(release): v2.0.0-next.168 [skip ci]
+[33m96a04179b[m 🐛 fix: slove market oidc error (#10715)
+[33mc61d19d1a[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33ma7f10bad0[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.167[m[33m)[m :bookmark: chore(release): v2.0.0-next.167 [skip ci]
+[33m7e1ba0f4a[m 🔨 chore: fix ci (#10735)
+[33m15400925e[m 🔨 chore: track user last active time (#10733)
+[33mc600e279d[m ✨ feat: Add Replicate image provider
+[33mfbce61f9c[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m59cbaa8f1[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.166[m[33m)[m :bookmark: chore(release): v2.0.0-next.166 [skip ci]
+[33m11ae75d5a[m 🔧 fix(Dockerfile): electron main typing pkg (#10693)
+[33mfc8e8b774[m[33m ([m[1;33mtag: [m[1;33mv0.0.0-nightly.pr10679.775[m[33m)[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m18a8e1a99[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.165[m[33m)[m :bookmark: chore(release): v2.0.0-next.165 [skip ci]
+[33me54f5d8e9[m[33m ([m[1;33mtag: [m[1;33mv0.0.0-nightly.pr10679.770[m[33m)[m ♻️ refactor(electron-main): client ipc decorate (#10679)
+[33mde0610531[m[33m ([m[1;33mtag: [m[1;33mv0.0.0-nightly.pr10679.767[m[33m, [m[1;33mtag: [m[1;33mv0.0.0-nightly.pr10679.763[m[33m)[m 🔨 chore(deps): remove `@types/ioredis` as `ioredis` now provides types by default (#10654)
+[33m086fe5e78[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m3654ffade[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.164[m[33m)[m :bookmark: chore(release): v2.0.0-next.164 [skip ci]
+[33md084032b3[m 💄 style: update link handling in PlanTag component to use react-router-dom (#10673)
+[33m370984df8[m 💄 style(profile): add mobile responsive layout and signup improvements (#10669)
+[33m83a07493d[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m087502222[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.163[m[33m)[m :bookmark: chore(release): v2.0.0-next.163 [skip ci]
+[33md7c5b7bb5[m 🐛 fix: add smooth scroll to top on 'More' button click in Title component (#10178)
+[33m3e70787ea[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m9deabaeb0[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.162[m[33m)[m :bookmark: chore(release): v2.0.0-next.162 [skip ci]
+[33m5b57fa716[m ⚡️ perf: optimize better-auth performance with cache (#10621)
+[33m8698db551[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m11662f1e6[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.161[m[33m)[m :bookmark: chore(release): v2.0.0-next.161 [skip ci]
+[33m651e0c5fd[m ✨ feat: support klavis mcp connector (#10584)
+[33m26f27e417[m 🔨 chore: integrate code inspector plugin and update turbopack configuration (#10588)
+[33mfc8971a4c[m ✅ test: add unit tests for ImportService (#10599)
+[33me5f31ebeb[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33mbfa8d9b3e[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.160[m[33m)[m :bookmark: chore(release): v2.0.0-next.160 [skip ci]
+[33m522ce3664[m ⚡️ perf: optimize better-auth bundle size (#10604)
+[33mb2cb88157[m ⚡️ perf: optimize better-auth query speed with database joins (#10605)
+[33mde6e410ec[m 🌐 chore: translate non-English comments to English in packages/database (#10613)
+[33mbdf9e9e95[m 🌐 i18n(tr-TR): improve Turkish translations (#10611)
+[33mebc280ee3[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m417ce219d[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.159[m[33m)[m :bookmark: chore(release): v2.0.0-next.159 [skip ci]
+[33me92608fa3[m ✨ feat: betterauth username signin (#10607)
+[33m156f53228[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m5a06f362b[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.158[m[33m)[m :bookmark: chore(release): v2.0.0-next.158 [skip ci]
+[33m100196c23[m 🐛 fix: limit check-user response surface (#10609)
+[33m574ddeee4[m 🔨 chore: add source type into user_install_plugins (#10603)
+[33mf8e7fd22e[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33me643dc48e[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.157[m[33m)[m :bookmark: chore(release): v2.0.0-next.157 [skip ci]
+[33me04e02bf3[m 🌐 chore: translate non-English comments to English in store modules and types (#10597)
+[33m4ab636243[m 💄 style: Update Spark X1.5 model (#10103)
+[33mf59f1c976[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m9b1a730f6[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.156[m[33m)[m :bookmark: chore(release): v2.0.0-next.156 [skip ci]
+[33mced989c3f[m 🔨 chore: environment variable loading with dotenv-expand (#10590)
+[33m76333afc2[m 🐛 fix: fix React CVE issue (#10593)
+[33m0d90cdfec[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m129d2351e[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.155[m[33m)[m :bookmark: chore(release): v2.0.0-next.155 [skip ci]
+[33m22c611c53[m 🌐 chore: translate non-English comments to English in python-interpreter (#10568)
+[33md1f72c3ea[m 🐛 fix: missing init user after user creation (#10587)
+[33me0dfd4dd1[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m160262f80[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.154[m[33m)[m :bookmark: chore(release): v2.0.0-next.154 [skip ci]
+[33med3f0a038[m 🐛 fix: udpate discover detail tools get & more link (#10586)
+[33m2f74cd885[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33m843682a19[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.153[m[33m)[m :bookmark: chore(release): v2.0.0-next.153 [skip ci]
+[33m9a83a6c20[m 🔒 fix(security): prevent prompt injection in Claude workflows (#10585)
+[33m9c8141354[m 📝 docs(bot): Auto sync agents & plugin to readme
+[33mf69e180b9[m[33m ([m[1;33mtag: [m[1;33mv2.0.0-next.152[m[33m)[m :bookmark: chore(release): v2.0.0-next.152 [skip ci]
+[33m71f819178[m ✨ feat: optimize betterauth UX (#1
