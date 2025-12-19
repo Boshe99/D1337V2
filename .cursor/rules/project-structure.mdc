@@ -3,7 +3,7 @@ description: Project directory structure overview
 alwaysApply: false
 ---
 
-# LobeChat Project Structure
+# D1337 Ai Project Structure
 
 ## Complete Project Structure
 
@@ -12,7 +12,7 @@ This project uses common monorepo structure. The workspace packages name use `@l
 **note**: some not very important files are not shown for simplicity.
 
 ```plaintext
-lobe-chat/
+d1337-ai/
 ├── apps/
 │   └── desktop/
 ├── docs/
