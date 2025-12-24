@@ -28,6 +28,9 @@ class Config:
     
     BOT_USERNAME: str = os.getenv("BOT_USERNAME", "D1337Bot")
     
+    PASTE_SERVER_URL: str = os.getenv("PASTE_SERVER_URL", "")
+    PASTE_SERVER_PORT: int = int(os.getenv("PASTE_SERVER_PORT", "8080"))
+    
     INITIAL_ADMIN_IDS: List[int] = field(default_factory=_parse_admin_ids)
 
 
