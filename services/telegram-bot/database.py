@@ -80,6 +80,24 @@ class Database:
                 ON admin_users(telegram_id)
             """)
             logger.info("Database schema initialized")
+            
+            await self._bootstrap_admins()
+
+    async def _bootstrap_admins(self):
+        if not config.INITIAL_ADMIN_IDS:
+            return
+        
+        async with self.pool.acquire() as conn:
+            for admin_id in config.INITIAL_ADMIN_IDS:
+                try:
+                    await conn.execute("""
+                        INSERT INTO admin_users (telegram_id, granted_by)
+                        VALUES ($1, $1)
+                        ON CONFLICT (telegram_id) DO NOTHING
+                    """, admin_id)
+                    logger.info(f"Bootstrapped admin user: {admin_id}")
+                except Exception as e:
+                    logger.error(f"Failed to bootstrap admin {admin_id}: {e}")
 
     async def close(self):
         if self.pool:

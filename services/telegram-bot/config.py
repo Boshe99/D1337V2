@@ -1,5 +1,16 @@
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
+
+
+def _parse_admin_ids() -> List[int]:
+    ids_str = os.getenv("INITIAL_ADMIN_IDS", "")
+    if not ids_str:
+        return []
+    try:
+        return [int(id.strip()) for id in ids_str.split(",") if id.strip()]
+    except ValueError:
+        return []
 
 
 @dataclass
@@ -16,6 +27,8 @@ class Config:
     API_GATEWAY_URL: str = os.getenv("API_GATEWAY_URL", "https://api.hyperbolic.xyz/v1")
     
     BOT_USERNAME: str = os.getenv("BOT_USERNAME", "D1337Bot")
+    
+    INITIAL_ADMIN_IDS: List[int] = field(default_factory=_parse_admin_ids)
 
 
 config = Config()

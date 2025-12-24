@@ -256,10 +256,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     thinking_msg = await update.message.reply_text("Thinking...")
     
     try:
+        logger.info(f"Processing message from user {user.id} in {chat.type}: {query_text[:50]}...")
+        
         response_text, tokens_used, response_time_ms = await api_gateway.chat_completion(
             message=query_text,
             system_prompt=SYSTEM_PROMPT
         )
+        
+        logger.info(f"API response received in {response_time_ms}ms, tokens: {tokens_used}")
         
         await rate_limiter.increment_query_count(user.id)
         
