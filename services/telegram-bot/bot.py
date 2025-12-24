@@ -3,7 +3,7 @@ import asyncio
 import re
 from typing import Optional
 
-from telegram import Update, Bot
+from telegram import Update
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -11,7 +11,7 @@ from telegram.ext import (
     ContextTypes,
     filters
 )
-from telegram.constants import ChatType, ParseMode
+from telegram.constants import ChatType
 
 from config import config
 from database import db

@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import redis.asyncio as redis
 
