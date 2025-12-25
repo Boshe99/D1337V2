@@ -91,9 +91,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/status - Check your usage and premium status\n"
         "/mode - Switch AI mode (security/roleplay/vam)\n\n"
         "AI Modes:\n"
-        "- security: Cybersecurity & pentesting expert\n"
-        "- roleplay: Creative roleplay & storytelling\n"
-        "- vam: Virt-A-Mate & VR assistant\n\n"
+        "- security: Cybersecurity & pentesting expert\n\n"
         "Free Tier:\n"
         f"- {config.FREE_QUERY_LIMIT} queries per day in groups\n"
         "- No DM access\n\n"
@@ -148,30 +146,53 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def mode_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Switch between different AI modes: security, roleplay, vam"""
     user = update.effective_user
+    is_admin = await db.is_admin(user.id)
     
-    available_modes = list(SYSTEM_PROMPTS.keys())
+    # Restricted modes only for admin/owner
+    restricted_modes = ["roleplay", "vam"]
+    
+    # Show available modes based on user role
+    if is_admin:
+        available_modes = list(SYSTEM_PROMPTS.keys())
+    else:
+        available_modes = [m for m in SYSTEM_PROMPTS.keys() if m not in restricted_modes]
     
     if not context.args:
         current_mode = user_modes.get(user.id, "security")
         mode_list = "\n".join([f"- {m}" + (" (current)" if m == current_mode else "") for m in available_modes])
-        await update.message.reply_text(
+        
+        help_text = (
             f"Current mode: {current_mode}\n\n"
             f"Available modes:\n{mode_list}\n\n"
             "Usage: /mode <mode_name>\n\n"
             "Modes:\n"
-            "- security: Cybersecurity & pentesting expert\n"
-            "- roleplay: Creative roleplay & storytelling\n"
-            "- vam: Virt-A-Mate & VR assistant",
-            quote=False
+            "- security: Cybersecurity & pentesting expert"
         )
+        
+        if is_admin:
+            help_text += (
+                "\n- roleplay: Creative roleplay & storytelling (Admin only)"
+                "\n- vam: Virt-A-Mate & VR assistant (Admin only)"
+            )
+        
+        await update.message.reply_text(help_text, quote=False)
         return
     
     requested_mode = context.args[0].lower()
     
-    if requested_mode not in available_modes:
+    # Check if mode exists
+    if requested_mode not in SYSTEM_PROMPTS:
         await update.message.reply_text(
             f"Invalid mode: {requested_mode}\n"
             f"Available modes: {', '.join(available_modes)}",
+            quote=False
+        )
+        return
+    
+    # Check if user has permission for restricted modes
+    if requested_mode in restricted_modes and not is_admin:
+        await update.message.reply_text(
+            f"Mode '{requested_mode}' is restricted to admin/owner only.",
             quote=False
         )
         return
