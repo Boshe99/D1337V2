@@ -136,7 +136,7 @@ export default {
       passwordPlaceholder: '请输入密码',
       signinLink: '立即登录',
       submit: '注册',
-      subtitle: '加入 LobeChat 社区',
+      subtitle: '加入 D1337 社区',
       success: '注册成功！请检查您的邮箱验证邮件',
       title: '创建账号',
       usernamePlaceholder: '请输入用户名',
