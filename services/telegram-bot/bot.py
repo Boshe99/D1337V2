@@ -16,9 +16,13 @@ from telegram.constants import ChatType, ParseMode
 from config import config
 from database import db
 from rate_limiter import rate_limiter
-from api_gateway import api_gateway, SYSTEM_PROMPT
+from api_gateway import api_gateway, SYSTEM_PROMPT, SYSTEM_PROMPTS, get_system_prompt
 from sandbox import sandbox, SandboxImage
 from paste_server import paste_server
+
+# User mode storage (in-memory, resets on restart)
+# Format: {user_id: "security" | "roleplay" | "vam"}
+user_modes: dict[int, str] = {}
 
 MAX_TELEGRAM_MESSAGE_LENGTH = 4096
 
@@ -57,7 +61,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Commands:\n"
         "/start - Show this message\n"
         "/help - Get help\n"
-        "/status - Check your usage status"
+        "/status - Check your usage status\n"
+        "/mode - Switch AI mode (security/roleplay/vam)"
     )
     
     if is_admin:
@@ -83,7 +88,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Commands:\n"
         "/start - Welcome message\n"
         "/help - This help message\n"
-        "/status - Check your usage and premium status\n\n"
+        "/status - Check your usage and premium status\n"
+        "/mode - Switch AI mode (security/roleplay/vam)\n\n"
+        "AI Modes:\n"
+        "- security: Cybersecurity & pentesting expert\n"
+        "- roleplay: Creative roleplay & storytelling\n"
+        "- vam: Virt-A-Mate & VR assistant\n\n"
         "Free Tier:\n"
         f"- {config.FREE_QUERY_LIMIT} queries per day in groups\n"
         "- No DM access\n\n"
@@ -133,6 +143,53 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     status_msg += f"Total Tokens Used: {stats['total_tokens']}"
     
     await update.message.reply_text(status_msg, quote=False)
+
+
+async def mode_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Switch between different AI modes: security, roleplay, vam"""
+    user = update.effective_user
+    
+    available_modes = list(SYSTEM_PROMPTS.keys())
+    
+    if not context.args:
+        current_mode = user_modes.get(user.id, "security")
+        mode_list = "\n".join([f"- {m}" + (" (current)" if m == current_mode else "") for m in available_modes])
+        await update.message.reply_text(
+            f"Current mode: {current_mode}\n\n"
+            f"Available modes:\n{mode_list}\n\n"
+            "Usage: /mode <mode_name>\n\n"
+            "Modes:\n"
+            "- security: Cybersecurity & pentesting expert\n"
+            "- roleplay: Creative roleplay & storytelling\n"
+            "- vam: Virt-A-Mate & VR assistant",
+            quote=False
+        )
+        return
+    
+    requested_mode = context.args[0].lower()
+    
+    if requested_mode not in available_modes:
+        await update.message.reply_text(
+            f"Invalid mode: {requested_mode}\n"
+            f"Available modes: {', '.join(available_modes)}",
+            quote=False
+        )
+        return
+    
+    user_modes[user.id] = requested_mode
+    
+    mode_descriptions = {
+        "security": "Cybersecurity expert mode - pentesting, exploits, security research",
+        "roleplay": "Creative roleplay mode - storytelling, characters, immersive scenarios",
+        "vam": "VAM assistant mode - Virt-A-Mate, VR, 3D character creation"
+    }
+    
+    await update.message.reply_text(
+        f"Mode switched to: {requested_mode}\n\n"
+        f"{mode_descriptions.get(requested_mode, '')}",
+        quote=False
+    )
+    logger.info(f"User {user.id} switched to mode: {requested_mode}")
 
 
 async def exec_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -461,9 +518,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         logger.info(f"Processing message from user {user.id} in {chat.type}: {query_text[:50]}...")
         
+        # Get user's current mode and corresponding system prompt
+        current_mode = user_modes.get(user.id, "security")
+        system_prompt = get_system_prompt(current_mode)
+        
         response_text, tokens_used, response_time_ms = await api_gateway.chat_completion(
             message=query_text,
-            system_prompt=SYSTEM_PROMPT
+            system_prompt=system_prompt
         )
         
         logger.info(f"API response received in {response_time_ms}ms, tokens: {tokens_used}")
@@ -549,6 +610,7 @@ def main():
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("status", status_command))
+    application.add_handler(CommandHandler("mode", mode_command))
     application.add_handler(CommandHandler("exec", exec_command))
     application.add_handler(CommandHandler("pt", pt_command))
     application.add_handler(CommandHandler("do", do_command))
