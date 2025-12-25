@@ -584,6 +584,126 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
+async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle voice messages - transcribe and process"""
+    user = update.effective_user
+    chat = update.effective_chat
+    
+    await db.get_or_create_user(
+        telegram_id=user.id,
+        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name
+    )
+    
+    is_premium = await db.is_premium_user(user.id)
+    is_admin = await db.is_admin(user.id)
+    is_private = chat.type == ChatType.PRIVATE
+    
+    # Check permissions
+    if is_private and not is_premium and not is_admin:
+        await update.message.reply_text(
+            "Voice messages are only available for Premium users in DMs.\n"
+            "Use me in groups instead!",
+            quote=False
+        )
+        return
+    
+    # Rate limit check
+    can_query, remaining = await rate_limiter.can_query(user.id, is_premium or is_admin)
+    if not can_query:
+        await update.message.reply_text(
+            f"You've reached your daily limit. Try again later.",
+            quote=False
+        )
+        return
+    
+    thinking_msg = await update.message.reply_text("Processing voice message...", quote=False)
+    
+    try:
+        # Download voice file
+        voice = update.message.voice
+        voice_file = await context.bot.get_file(voice.file_id)
+        
+        # Download to memory
+        import io
+        voice_bytes = io.BytesIO()
+        await voice_file.download_to_memory(voice_bytes)
+        voice_bytes.seek(0)
+        
+        # Try to transcribe using OpenAI Whisper API if available
+        transcribed_text = None
+        
+        if config.OPENAI_API_KEY:
+            try:
+                import openai
+                client = openai.OpenAI(api_key=config.OPENAI_API_KEY)
+                
+                # Save to temp file for Whisper
+                import tempfile
+                with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as tmp:
+                    tmp.write(voice_bytes.read())
+                    tmp_path = tmp.name
+                
+                with open(tmp_path, "rb") as audio_file:
+                    transcript = client.audio.transcriptions.create(
+                        model="whisper-1",
+                        file=audio_file
+                    )
+                    transcribed_text = transcript.text
+                
+                import os
+                os.unlink(tmp_path)
+                
+            except Exception as e:
+                logger.warning(f"Whisper transcription failed: {e}")
+        
+        if not transcribed_text:
+            await thinking_msg.edit_text(
+                "Voice transcription not available. Please send text messages instead.\n"
+                "Tip: Set OPENAI_API_KEY for voice support."
+            )
+            return
+        
+        await thinking_msg.edit_text(f"Transcribed: {transcribed_text[:100]}...\n\nProcessing...")
+        
+        # Get user's current mode and process
+        current_mode = user_modes.get(user.id, "security")
+        system_prompt = get_system_prompt(current_mode)
+        
+        response_text, tokens_used, response_time_ms = await api_gateway.chat_completion(
+            message=transcribed_text,
+            system_prompt=system_prompt
+        )
+        
+        await rate_limiter.increment_query_count(user.id)
+        
+        await db.log_usage(
+            telegram_user_id=user.id,
+            chat_id=chat.id,
+            chat_type=str(chat.type),
+            message_text=f"[VOICE] {transcribed_text}",
+            response_text=response_text,
+            tokens_used=tokens_used,
+            response_time_ms=response_time_ms
+        )
+        
+        await thinking_msg.delete()
+        await update.message.reply_text(
+            response_text,
+            quote=False,
+            disable_web_page_preview=False
+        )
+        
+        logger.info(f"Voice message processed for user {user.id}: {transcribed_text[:50]}...")
+        
+    except Exception as e:
+        logger.error(f"Error processing voice message: {e}")
+        await thinking_msg.edit_text(
+            "Sorry, I couldn't process your voice message. Please try again or send text."
+        )
+
+
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.error(f"Exception while handling an update: {context.error}")
 
@@ -642,6 +762,12 @@ def main():
     application.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND,
         handle_message
+    ))
+    
+    # Voice message handler
+    application.add_handler(MessageHandler(
+        filters.VOICE,
+        handle_voice_message
     ))
     
     application.add_error_handler(error_handler)
