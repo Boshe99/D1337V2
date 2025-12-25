@@ -24,7 +24,8 @@ class Config:
     FREE_QUERY_LIMIT: int = 5
     RATE_LIMIT_WINDOW: int = 86400
     
-    API_GATEWAY_URL: str = os.getenv("API_GATEWAY_URL", "https://api.hyperbolic.xyz/v1")
+    API_GATEWAY_URL: str = os.getenv("API_GATEWAY_URL", "http://147.185.41.81:8000/v1")
+    D1337_MODEL: str = os.getenv("D1337_MODEL", "d1337-agent")
     
     BOT_USERNAME: str = os.getenv("BOT_USERNAME", "D1337Bot")
     
