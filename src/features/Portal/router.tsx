@@ -3,6 +3,7 @@
 import { memo } from 'react';
 
 import { Artifacts } from './Artifacts';
+import { D1337Agent } from './D1337Agent';
 import { FilePreview } from './FilePreview';
 import { GroupThread } from './GroupThread';
 import { HomeBody, HomeTitle } from './Home';
@@ -13,7 +14,8 @@ import Header from './components/Header';
 import { PortalImpl } from './type';
 
 // Keep GroupThread before Thread so group DM threads take precedence when enabled
-const items: PortalImpl[] = [GroupThread, Thread, MessageDetail, Artifacts, Plugins, FilePreview];
+// D1337Agent is added for OpenHands iframe integration
+const items: PortalImpl[] = [GroupThread, Thread, MessageDetail, Artifacts, D1337Agent, Plugins, FilePreview];
 
 export const PortalTitle = memo(() => {
   const enabledList: boolean[] = [];
