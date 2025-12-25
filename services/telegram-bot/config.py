@@ -32,6 +32,12 @@ class Config:
     PASTE_SERVER_URL: str = os.getenv("PASTE_SERVER_URL", "")
     PASTE_SERVER_PORT: int = int(os.getenv("PASTE_SERVER_PORT", "8080"))
     
+    # Voice services (self-hosted on H100 cluster)
+    STT_SERVICE_URL: str = os.getenv("STT_SERVICE_URL", "http://147.185.41.81:8002")
+    TTS_SERVICE_URL: str = os.getenv("TTS_SERVICE_URL", "http://147.185.41.81:8003")
+    VOICE_ENABLED: bool = os.getenv("VOICE_ENABLED", "true").lower() == "true"
+    VOICE_RESPONSE_ENABLED: bool = os.getenv("VOICE_RESPONSE_ENABLED", "true").lower() == "true"
+    
     INITIAL_ADMIN_IDS: List[int] = field(default_factory=_parse_admin_ids)
 
 

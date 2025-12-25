@@ -19,6 +19,7 @@ from rate_limiter import rate_limiter
 from api_gateway import api_gateway, SYSTEM_PROMPT, SYSTEM_PROMPTS, get_system_prompt
 from sandbox import sandbox, SandboxImage
 from paste_server import paste_server
+from voice_services import voice_services, VoiceEmotion, VoiceCharacter
 
 # User mode storage (in-memory, resets on restart)
 # Format: {user_id: "security" | "roleplay" | "vam"}
@@ -585,7 +586,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle voice messages - transcribe and process"""
+    """Handle voice messages - transcribe and process with self-hosted voice services"""
     user = update.effective_user
     chat = update.effective_chat
     
@@ -599,8 +600,19 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
     is_premium = await db.is_premium_user(user.id)
     is_admin = await db.is_admin(user.id)
     is_private = chat.type == ChatType.PRIVATE
+    current_mode = user_modes.get(user.id, "security")
     
-    # Check permissions
+    # Voice features are ADMIN ONLY for roleplay/vam modes
+    # Security mode voice is available to premium users
+    restricted_modes = ["roleplay", "vam"]
+    if current_mode in restricted_modes and not is_admin:
+        await update.message.reply_text(
+            "Voice features for this mode are admin-only.",
+            quote=False
+        )
+        return
+    
+    # Check permissions for security mode
     if is_private and not is_premium and not is_admin:
         await update.message.reply_text(
             "Voice messages are only available for Premium users in DMs.\n"
@@ -629,20 +641,26 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         import io
         voice_bytes = io.BytesIO()
         await voice_file.download_to_memory(voice_bytes)
-        voice_bytes.seek(0)
+        audio_data = voice_bytes.getvalue()
         
-        # Try to transcribe using OpenAI Whisper API if available
+        # Try self-hosted STT first (Faster-Whisper on H100)
         transcribed_text = None
         
-        if config.OPENAI_API_KEY:
+        if config.VOICE_ENABLED and voice_services.stt_available:
+            stt_result = await voice_services.transcribe(audio_data)
+            if stt_result:
+                transcribed_text = stt_result.text
+                logger.info(f"Self-hosted STT: {transcribed_text[:50]}... (lang: {stt_result.language})")
+        
+        # Fallback to OpenAI Whisper API if self-hosted not available
+        if not transcribed_text and config.OPENAI_API_KEY:
             try:
                 import openai
+                import tempfile
                 client = openai.OpenAI(api_key=config.OPENAI_API_KEY)
                 
-                # Save to temp file for Whisper
-                import tempfile
                 with tempfile.NamedTemporaryFile(suffix=".ogg", delete=False) as tmp:
-                    tmp.write(voice_bytes.read())
+                    tmp.write(audio_data)
                     tmp_path = tmp.name
                 
                 with open(tmp_path, "rb") as audio_file:
@@ -654,21 +672,20 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
                 
                 import os
                 os.unlink(tmp_path)
+                logger.info(f"OpenAI Whisper fallback: {transcribed_text[:50]}...")
                 
             except Exception as e:
                 logger.warning(f"Whisper transcription failed: {e}")
         
         if not transcribed_text:
             await thinking_msg.edit_text(
-                "Voice transcription not available. Please send text messages instead.\n"
-                "Tip: Set OPENAI_API_KEY for voice support."
+                "Voice transcription not available. Self-hosted STT service may be offline."
             )
             return
         
         await thinking_msg.edit_text(f"Transcribed: {transcribed_text[:100]}...\n\nProcessing...")
         
-        # Get user's current mode and process
-        current_mode = user_modes.get(user.id, "security")
+        # Get system prompt for current mode
         system_prompt = get_system_prompt(current_mode)
         
         response_text, tokens_used, response_time_ms = await api_gateway.chat_completion(
@@ -689,6 +706,37 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
         )
         
         await thinking_msg.delete()
+        
+        # For admin in roleplay/vam mode, try to send voice response
+        if is_admin and current_mode in restricted_modes and config.VOICE_RESPONSE_ENABLED and voice_services.tts_available:
+            try:
+                # Detect emotion from response
+                emotion = voice_services.detect_emotion_from_text(response_text)
+                
+                # Choose character based on mode
+                character = VoiceCharacter.ANIME_FEMALE if current_mode in ["roleplay", "vam"] else VoiceCharacter.ASSISTANT
+                
+                tts_result = await voice_services.synthesize(
+                    text=response_text[:500],  # Limit TTS length
+                    emotion=emotion,
+                    character=character
+                )
+                
+                if tts_result and tts_result.audio_data:
+                    # Send voice response
+                    voice_io = io.BytesIO(tts_result.audio_data)
+                    voice_io.name = "response.ogg"
+                    await update.message.reply_voice(
+                        voice=voice_io,
+                        caption=response_text[:1000] if len(response_text) > 500 else None,
+                        quote=False
+                    )
+                    logger.info(f"Voice response sent for user {user.id} (mode: {current_mode}, emotion: {emotion.value})")
+                    return
+            except Exception as e:
+                logger.warning(f"TTS failed, falling back to text: {e}")
+        
+        # Default: send text response
         await update.message.reply_text(
             response_text,
             quote=False,
@@ -718,6 +766,17 @@ async def post_init(application: Application):
         base_url=config.PASTE_SERVER_URL if hasattr(config, 'PASTE_SERVER_URL') else None
     )
     
+    # Connect voice services (self-hosted STT/TTS on H100)
+    if config.VOICE_ENABLED:
+        voice_services._client = None  # Reset client
+        voice_services.stt_url = config.STT_SERVICE_URL
+        voice_services.tts_url = config.TTS_SERVICE_URL
+        await voice_services.connect()
+        if voice_services.stt_available:
+            logger.info(f"Voice STT service connected: {config.STT_SERVICE_URL}")
+        if voice_services.tts_available:
+            logger.info(f"Voice TTS service connected: {config.TTS_SERVICE_URL}")
+    
     if await sandbox.check_docker_available():
         logger.info("Docker available, pulling sandbox images...")
         asyncio.create_task(sandbox.pull_images())
@@ -729,6 +788,7 @@ async def post_init(application: Application):
 
 async def post_shutdown(application: Application):
     await paste_server.close()
+    await voice_services.close()
     await db.close()
     await rate_limiter.close()
     await api_gateway.close()
