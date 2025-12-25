@@ -1,3 +1,5 @@
+'use client';
+
 import { Skeleton } from 'antd';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
