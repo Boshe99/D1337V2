@@ -7,10 +7,12 @@ import { PortalFile } from './initialState';
 
 export interface ChatPortalAction {
   closeArtifact: () => void;
+  closeD1337Agent: () => void;
   closeFilePreview: () => void;
   closeMessageDetail: () => void;
   closeToolUI: () => void;
   openArtifact: (artifact: PortalArtifact) => void;
+  openD1337Agent: () => void;
   openFilePreview: (portal: PortalFile) => void;
   openMessageDetail: (messageId: string) => void;
   openToolUI: (messageId: string, identifier: string) => void;
@@ -27,6 +29,10 @@ export const chatPortalSlice: StateCreator<
     get().togglePortal(false);
     set({ portalArtifact: undefined }, false, 'closeArtifact');
   },
+  closeD1337Agent: () => {
+    get().togglePortal(false);
+    set({ portalD1337Agent: undefined }, false, 'closeD1337Agent');
+  },
   closeFilePreview: () => {
     set({ portalFile: undefined }, false, 'closeFilePreview');
   },
@@ -40,6 +46,11 @@ export const chatPortalSlice: StateCreator<
     get().togglePortal(true);
 
     set({ portalArtifact: artifact }, false, 'openArtifact');
+  },
+  openD1337Agent: () => {
+    get().togglePortal(true);
+
+    set({ portalD1337Agent: true }, false, 'openD1337Agent');
   },
   openFilePreview: (portal) => {
     get().togglePortal(true);

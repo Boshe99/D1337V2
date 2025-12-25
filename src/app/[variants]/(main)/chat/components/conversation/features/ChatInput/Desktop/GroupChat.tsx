@@ -23,6 +23,7 @@ const leftActions: ActionKeys[] = [
   'typo',
   'fileUpload',
   'knowledgeBase',
+  'd1337Agent',
   '---',
   ['stt', 'clear'],
   'groupChatToken',

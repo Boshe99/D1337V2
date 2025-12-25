@@ -484,4 +484,8 @@ export default {
   },
   you: '你',
   zenMode: '专注模式',
+  d1337Agent: {
+    title: 'D1337 Agent',
+    openInNewTab: '在新标签页中打开',
+  },
 };

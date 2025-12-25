@@ -14,6 +14,7 @@ export interface PortalFile {
 export interface ChatPortalState {
   portalArtifact?: PortalArtifact;
   portalArtifactDisplayMode?: ArtifactDisplayMode;
+  portalD1337Agent?: boolean;
   portalFile?: PortalFile;
   portalMessageDetail?: string;
   portalThreadId?: string;

@@ -1,4 +1,5 @@
 import Clear from './Clear';
+import D1337Agent from './D1337Agent';
 import History from './History';
 import Knowledge from './Knowledge';
 import Mention from './Mention';
@@ -14,6 +15,7 @@ import Upload from './Upload';
 
 export const actionMap = {
   clear: Clear,
+  d1337Agent: D1337Agent,
   fileUpload: Upload,
   groupChatToken: GroupChatToken,
   history: History,
