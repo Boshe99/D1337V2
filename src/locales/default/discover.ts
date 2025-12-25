@@ -94,10 +94,10 @@ export default {
         subtitle: '当前访问的助手已经因为以下可能的原因被拒绝了：',
         title: '助手已被拒绝',
       },
-      support: '有各种问题请复制链接发送到 <1>support@lobehub.com</1> 进行咨询。',
+      support: '有各种问题请复制链接发送到 <1>support@d1337.ai</1> 进行咨询。',
       unpublished: {
         subtitle:
-          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
+          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@d1337.ai</1> 进行咨询。',
         title: '助手正在审核中',
       },
     },
@@ -147,7 +147,7 @@ export default {
       desc1: '在会话窗口中通过右上角设置进入你想提交助手的设置页面;',
       desc2: '点击右上角提交到助手市场按钮。',
       tag: '方法一',
-      title: '通过 LobeChat 提交',
+      title: '通过 D1337 提交',
     },
     func2: {
       button: '前往 Github 助手仓库',
@@ -304,7 +304,7 @@ export default {
             cursor:
               '- 导航到 **设置**，然后选择 Cursor 设置\n- 在左侧选择 **MCP**\n- 点击右上角的 **添加新的全局 MCP 服务器**\n- 复制并粘贴服务器配置到现有文件中，然后保存',
             lobeChat:
-              '- 打开 **LobeChat 桌面版** 应用\n- 前往 **设置** - **默认助手**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
+              '- 打开 **D1337 桌面版** 应用\n- 前往 **设置** - **默认助手**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
             openai:
               '- 打开您的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为您的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
             vscode:
@@ -323,7 +323,7 @@ export default {
         title: '安装方式',
       },
       githubBadge: {
-        desc: 'LobeHub 定期对代码库和文档进行扫描，以便于：\n\n- 确认 MCP 服务器正常运行。\n- 提取服务器特性，例如工具、资源、提示信息以及所需参数。\n- 我们的 Badge 帮助用户快速评估 MCP 服务器的安全性、功能特性以及安装指南。\n\n请将以下代码复制到你的 `README.md` 文件中：',
+        desc: 'D1337 定期对代码库和文档进行扫描，以便于：\n\n- 确认 MCP 服务器正常运行。\n- 提取服务器特性，例如工具、资源、提示信息以及所需参数。\n- 我们的 Badge 帮助用户快速评估 MCP 服务器的安全性、功能特性以及安装指南。\n\n请将以下代码复制到你的 `README.md` 文件中：',
       },
       nav: {
         needHelp: '需要帮助？',
@@ -597,14 +597,14 @@ export default {
       type: '类型',
     },
     providerInfo: {
-      apiTooltip: 'LobeChat 支持为此提供商使用自定义 API 密钥。',
+      apiTooltip: 'D1337 支持为此提供商使用自定义 API 密钥。',
       input: '输入价格',
       inputTooltip: '每百万个 Token 的成本',
       latency: '延迟',
       latencyTooltip: '服务商发送第一个 Token 的平均响应时间',
       maxOutput: '最大输出长度',
       maxOutputTooltip: '此端点可以生成的最大 Token 数',
-      officialTooltip: 'LobeHub 官方服务',
+      officialTooltip: 'D1337 官方服务',
       output: '输出价格',
       outputTooltip: '每百万个 Token 的成本',
       streamCancellationTooltip: '此服务商支持流取消功能。',

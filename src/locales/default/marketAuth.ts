@@ -23,7 +23,7 @@ export default {
     },
     titles: {
       error: '授权失败',
-      loading: 'LobeHub Market 授权',
+      loading: 'D1337 Market 授权',
       success: '授权成功',
     },
   },
@@ -44,7 +44,7 @@ export default {
     stateMissing: '未找到授权状态，请重试。',
   },
   messages: {
-    authorized: 'LobeHub 服务授权成功',
+    authorized: 'D1337 服务授权成功',
     loading: '正在启动授权流程...',
     success: {
       cloudMcpInstall: '授权成功！现在可以安装 Cloud MCP 插件了。',
